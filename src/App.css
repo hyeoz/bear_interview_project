@@ -1,38 +1,50 @@
 .App {
-  text-align: center;
+  padding: 40px 108px 73px 52px;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.fleet {
+  margin-bottom: 24px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.filter-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+.MuiPopover-paper {
+  margin-top: 4px;
+  padding-bottom: 18px;
+  border-radius: 8px !important;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.MuiPopover-paper .MuiMenu-list {
+  padding: 0;
+}
+.MuiPopover-paper .MuiOutlinedInput-root {
+  height: 32px;
+  border-radius: 8px;
+  margin: 8px 8px 12px 8px;
+}
+.MuiOutlinedInput-root input {
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.17px;
+  line-height: 20px;
+}
+.MuiOutlinedInput-root input::placeholder,
+.MuiOutlinedInput-root input::-webkit-input-placeholder,
+.MuiOutlinedInput-root input::-moz-placeholder,
+.MuiOutlinedInput-root input::-ms-input-placeholder {
+  color: var(--grey-400-color) !important;
+}
+.MuiOutlinedInput-root:has(#filter-input) {
+  background-color: #eeeeee;
+}
+.MuiMenu-list .MuiOutlinedInput-notchedOutline {
+  border-width: 0px !important;
+}
+.MuiOutlinedInput-input {
+  display: flex !important;
+  align-items: center !important;
 }
