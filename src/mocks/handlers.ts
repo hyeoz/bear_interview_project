@@ -23,27 +23,32 @@ export const handlers = [
       const robotId = req.url.searchParams.get("robot_id");
       const isStarred = req.url.searchParams.get("is_starred");
 
-      console.log(page, locationName, robotId, isStarred);
       let filteredLocations = [...locations];
-      if (!!locationName || !!robotId) {
-        filteredLocations.filter(
-          (loc) =>
+      let totalCount = locations.length;
+
+      if (locationName || robotId) {
+        filteredLocations = filteredLocations.filter((loc) => {
+          return (
             (locationName && loc.name.includes(locationName)) ||
             (robotId && loc.robot.id.includes(robotId))
-        );
+          );
+        });
       }
-      if (!!isStarred) {
+      if (isStarred) {
         const location_ids = JSON.parse(
           sessionStorage.getItem("starred_location_ids") || "[]"
         );
-        filteredLocations.filter((loc) => location_ids.includes(loc.id));
+        filteredLocations = filteredLocations.filter((loc) =>
+          location_ids.includes(loc.id)
+        );
       }
       if (!!page) {
+        totalCount = filteredLocations.length;
         filteredLocations = filteredLocations.slice((page - 1) * 6, page * 6);
       }
 
       const result: LocationsResult = {
-        total_count: locations.length,
+        total_count: totalCount,
         locations: filteredLocations,
       };
 

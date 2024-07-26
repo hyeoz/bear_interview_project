@@ -38,7 +38,7 @@ function App() {
   const getLocation = useCallback(async () => {
     const res = await getLocationsData({
       page,
-      locationName: locationName === "ALL" ? undefined : locationName,
+      location_name: locationName === "ALL" ? undefined : locationName,
     });
     setData(res.data);
   }, [page]);
@@ -49,7 +49,7 @@ function App() {
         <h5 className="fleet">Your Fleet</h5>
         <div className="filter-wrapper">
           <LocationFilter value={locationName} setValue={setLocationName} />
-          <SearchInput />
+          <SearchInput page={page} setData={setData} />
         </div>
         <RobotTable data={data.locations} />
 

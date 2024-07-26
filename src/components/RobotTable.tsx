@@ -32,10 +32,6 @@ export function RobotTable({ data }: { data: Location[] }) {
   };
 
   const getIsStarred = (id: string) => {
-    console.log(
-      id,
-      Array.isArray(locationIds) ? locationIds.includes(id) : false
-    );
     return Array.isArray(locationIds) ? locationIds.includes(id) : false;
   };
 

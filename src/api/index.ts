@@ -28,17 +28,17 @@ const getAllLocationsData = async () => {
 
 const getLocationsData = async ({
   page,
-  locationName,
-  robotId,
-  isStarred,
+  location_name,
+  robot_id,
+  is_starred,
 }: {
   page: number;
-  locationName?: string;
-  robotId?: string;
-  isStarred?: boolean;
+  location_name?: string;
+  robot_id?: string;
+  is_starred?: boolean;
 }) => {
   const res = await API.get<LocationsDataType>("locations", {
-    params: { page, locationName, robotId, isStarred },
+    params: { page, location_name, robot_id, is_starred },
   });
   if (res.status === 200) {
     return {
