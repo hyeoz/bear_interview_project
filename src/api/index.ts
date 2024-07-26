@@ -55,12 +55,12 @@ const getLocationsData = async ({
 };
 
 const getLocationIdsData = async () => {
-  const res = await API.get<{ location_ids: number[] }>("starred_location_ids");
+  const res = await API.get<{ location_ids: string[] }>("starred_location_ids");
   return res;
 };
 
 const putLocationIdData = async (id: number) => {
-  await API.put("starred_location_ids", { id });
+  await API.put("starred_location_ids", id);
 };
 
 export {

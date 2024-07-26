@@ -71,8 +71,14 @@ export const handlers = [
         ctx.json({ error_msg: "Encountered unexpected error" })
       );
     }
+    const location_ids = JSON.parse(
+      sessionStorage.getItem("starred_location_ids") || "[]"
+    );
 
-    sessionStorage.setItem("starred_location_ids", JSON.stringify(req.body));
+    sessionStorage.setItem(
+      "starred_location_ids",
+      JSON.stringify([...location_ids, req.body])
+    );
 
     return res(ctx.status(204));
   }),

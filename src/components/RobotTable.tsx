@@ -11,7 +11,7 @@ import { Location } from "../mocks/db";
 import { getLocationIdsData, putLocationIdData } from "../api";
 
 export function RobotTable({ data }: { data: Location[] }) {
-  const [locationIds, setLocationIds] = useState<number[]>([]);
+  const [locationIds, setLocationIds] = useState<string[]>([]);
 
   useEffect(() => {
     getLocationIds();
@@ -25,12 +25,17 @@ export function RobotTable({ data }: { data: Location[] }) {
   const onClickEmptyStar = async (id: number) => {
     try {
       await putLocationIdData(id);
+      await getLocationIds();
     } catch (error) {
       alert("Could not star an item due to unexpected error!");
     }
   };
 
-  const getIsStarred = (id: number) => {
+  const getIsStarred = (id: string) => {
+    console.log(
+      id,
+      Array.isArray(locationIds) ? locationIds.includes(id) : false
+    );
     return Array.isArray(locationIds) ? locationIds.includes(id) : false;
   };
 
@@ -45,11 +50,11 @@ export function RobotTable({ data }: { data: Location[] }) {
           }}
         />
       ),
-      renderCell: (data) => {
-        console.log(data);
-        return getIsStarred(data.row.id) ? (
+      renderCell: (data) =>
+        getIsStarred(data.row.id + "") ? (
           <StarRounded
             style={{
+              marginTop: "12px",
               color: "var(--system-notice-color)",
             }}
           />
@@ -66,8 +71,7 @@ export function RobotTable({ data }: { data: Location[] }) {
               }}
             />
           </div>
-        );
-      },
+        ),
       width: 24,
       sortable: false,
     },
@@ -111,7 +115,7 @@ export function RobotTable({ data }: { data: Location[] }) {
             alignItems: "center",
             height: "36px",
             marginTop: "6px",
-            padding: "auto 16px",
+            paddingRight: "16px",
           }}
         >
           <p

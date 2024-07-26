@@ -43,8 +43,6 @@ function App() {
     setData(res.data);
   }, [page]);
 
-  console.log(data);
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
