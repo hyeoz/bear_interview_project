@@ -1,25 +1,35 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useState } from "react";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+import { LocationFilter } from "./components/LocationFilter";
+import { SearchInput } from "./components/SearchInput";
 import "./App.css";
+import { RobotTable } from "./components/RobotTable";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#3961F8",
+      dark: "#133BD3",
+      light: "#B8DDFF",
+    },
+  },
+});
 
 function App() {
+  const [filterValue, setFilterValue] = useState("ALL");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <h5 className="fleet">Your Fleet</h5>
+        <div className="filter-wrapper">
+          <LocationFilter value={filterValue} setValue={setFilterValue} />
+          <SearchInput />
+        </div>
+        <RobotTable />
+      </div>
+    </ThemeProvider>
   );
 }
 
