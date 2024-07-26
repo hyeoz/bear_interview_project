@@ -13,6 +13,9 @@ export function SearchInput() {
         "> div": {
           borderRadius: "8px",
         },
+        "&:hover": {
+          borderColor: "var(--primary-main-color)",
+        },
       }}
       InputProps={{
         endAdornment: (

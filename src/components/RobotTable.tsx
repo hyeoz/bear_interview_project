@@ -1,15 +1,42 @@
+import { useEffect, useState } from "react";
 import {
-  ArrowBackIosNewRounded,
   ArrowForwardIosRounded,
   RefreshRounded,
+  StarOutlineRounded,
+  StarRounded,
 } from "@mui/icons-material";
-import { Pagination, PaginationItem } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-export function RobotTable() {
-  const columns: GridColDef<any>[] = [
+import { Location } from "../mocks/db";
+import { getLocationIdsData, putLocationIdData } from "../api";
+
+export function RobotTable({ data }: { data: Location[] }) {
+  const [locationIds, setLocationIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    getLocationIds();
+  }, []);
+
+  const getLocationIds = async () => {
+    const res = await getLocationIdsData();
+    setLocationIds(res.data.location_ids);
+  };
+
+  const onClickEmptyStar = async (id: number) => {
+    try {
+      await putLocationIdData(id);
+    } catch (error) {
+      alert("Could not star an item due to unexpected error!");
+    }
+  };
+
+  const getIsStarred = (id: number) => {
+    return Array.isArray(locationIds) ? locationIds.includes(id) : false;
+  };
+
+  const columns: GridColDef<Location>[] = [
     {
-      field: "star",
+      field: "starred",
       renderHeader: (params) => (
         <RefreshRounded
           style={{
@@ -18,11 +45,34 @@ export function RobotTable() {
           }}
         />
       ),
+      renderCell: (data) => {
+        console.log(data);
+        return getIsStarred(data.row.id) ? (
+          <StarRounded
+            style={{
+              color: "var(--system-notice-color)",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => onClickEmptyStar(data.row.id)}
+          >
+            <StarOutlineRounded
+              style={{
+                marginTop: "12px",
+              }}
+            />
+          </div>
+        );
+      },
       width: 24,
       sortable: false,
     },
     {
-      field: "locations",
+      field: "name",
       // headerName: "Locations",
       renderHeader: (params) => (
         <div
@@ -49,11 +99,45 @@ export function RobotTable() {
           </p>
         </div>
       ),
+      renderCell: (data) => (
+        <div
+          style={{
+            borderRadius: "8px",
+            backgroundColor: data.row.robot.is_online
+              ? "var(--secondary-main-color)"
+              : "#e4e4e4",
+            display: "flex",
+            // justifyContent: "center",
+            alignItems: "center",
+            height: "36px",
+            marginTop: "6px",
+            padding: "auto 16px",
+          }}
+        >
+          <p
+            className="subtitle_1"
+            style={{
+              color: "#fff",
+              flex: 1,
+              textAlign: "center",
+            }}
+          >
+            {data.row.name}
+          </p>
+          <ArrowForwardIosRounded
+            style={{
+              color: "#fff",
+              width: "16px",
+              height: "16px",
+            }}
+          />
+        </div>
+      ),
       width: 432,
       sortable: false,
     },
     {
-      field: "robots",
+      field: "robot.id",
       renderHeader: (params) => (
         <div
           style={{
@@ -72,6 +156,50 @@ export function RobotTable() {
           <p className="body_2">Robots</p>
         </div>
       ),
+      renderCell: (data) =>
+        !!data.row.robot.id ? (
+          data.row.robot.is_online ? (
+            <div
+              style={{
+                display: "flex",
+                gap: "16px",
+                marginTop: "12px",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: 999,
+                  backgroundColor: "var(--system-success-color)",
+                }}
+              />
+              <p className="subtitle_1">{data.row.robot.id}</p>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                gap: "16px",
+                marginTop: "12px",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: 999,
+                  backgroundColor: "var(--system-notice-color)",
+                }}
+              />
+              <p className="subtitle_2">{data.row.robot.id}</p>
+            </div>
+          )
+        ) : (
+          <a>Add</a>
+        ),
       width: 240,
       sortable: false,
     },
@@ -95,50 +223,39 @@ export function RobotTable() {
           <p className="body_2">Location Types</p>
         </div>
       ),
+      renderCell: (data) => (
+        <div
+          style={{
+            marginTop: "12px",
+          }}
+        >
+          {data.row.robot.is_online ? (
+            <p className="body_2">Serving</p>
+          ) : (
+            <p className="body_2">Disinfection</p>
+          )}
+        </div>
+      ),
       flex: 1,
       sortable: false,
     },
   ];
 
   return (
-    <>
-      <DataGrid
-        rows={[]}
-        columns={columns}
-        checkboxSelection
-        disableRowSelectionOnClick
-        disableColumnMenu
-        disableColumnResize
-        pageSizeOptions={[6]}
-        hideFooter
-        sx={{
-          "& .MuiDataGrid-columnSeparator": {
-            display: "none",
-          },
-        }}
-      />
-      <Pagination
-        count={10}
-        page={1}
-        color="primary"
-        size="small"
-        sx={{
-          marginTop: "24px",
-          "& ul": {
-            justifyContent: "center",
-            gap: "16px",
-          },
-        }}
-        renderItem={(item) => (
-          <PaginationItem
-            slots={{
-              previous: ArrowBackIosNewRounded,
-              next: ArrowForwardIosRounded,
-            }}
-            {...item}
-          />
-        )}
-      />
-    </>
+    <DataGrid
+      rows={data}
+      columns={columns}
+      checkboxSelection
+      disableRowSelectionOnClick
+      disableColumnMenu
+      disableColumnResize
+      pageSizeOptions={[6]}
+      hideFooter
+      sx={{
+        "& .MuiDataGrid-columnSeparator": {
+          display: "none",
+        },
+      }}
+    />
   );
 }

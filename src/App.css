@@ -48,3 +48,6 @@
   display: flex !important;
   align-items: center !important;
 }
+.MuiSelect-select > svg {
+  display: none;
+}
