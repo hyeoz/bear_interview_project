@@ -12,7 +12,14 @@ code {
     monospace;
 }
 /* TYPOGRAPHY */
-h1, h2, h3, h4, h5, h6, h7, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h7,
+p {
   margin: 0;
 }
 h1 {
@@ -149,23 +156,23 @@ h7 {
 }
 /* PALETTE */
 :root {
-  --primary-main-color: #3961F8;
-  --primary-dark-color: #133BD3;
-  --primary-light-color: #B8DDFF;
-  --primary-dark-10-color: #133BD31A;
-  --primary-dark-30-color: #133BD34C;
-  
-  --secondary-main-color: #0091FF;
-  --secondary-dark-color: #00457A;
-  --secondary-light-color: #D7EEFF;
-  --secondary-main-10-color: #0091FF1A;
-  --secondary-main-30-color: #0091FF4C;
-  --secondary-main-50-color: #0091FF80;
+  --primary-main-color: #3961f8;
+  --primary-dark-color: #133bd3;
+  --primary-light-color: #b8ddff;
+  --primary-dark-10-color: #133bd31a;
+  --primary-dark-30-color: #133bd34c;
 
-  --system-success-color: #00D15E
-  --system-notice-color: #F7B500
-  --system-warning-color: #FF8138
-  --system-error-color: #FF3B30
+  --secondary-main-color: #0091ff;
+  --secondary-dark-color: #00457a;
+  --secondary-light-color: #d7eeff;
+  --secondary-main-10-color: #0091ff1a;
+  --secondary-main-30-color: #0091ff4c;
+  --secondary-main-50-color: #0091ff80;
+
+  --system-success-color: #00d15e;
+  --system-notice-color: #f7b500;
+  --system-warning-color: #ff8138;
+  --system-error-color: #ff3b30;
 
   --black-scale-color: #000000;
   --grey-900-color: #222222;
@@ -179,5 +186,4 @@ h7 {
   --grey-100-color: #f5f5f5;
   --grey-50-color: #fafafa;
   --white-scale-color: #ffffff;
-
 }

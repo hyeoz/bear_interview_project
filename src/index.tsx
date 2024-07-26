@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import { SetupWorkerApi } from "msw";
+
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { SetupWorkerApi } from "msw";
+import "./index.css";
 
 if (process.env.NODE_ENV === "development") {
   const { worker }: { worker: SetupWorkerApi } = require("./mocks/browser");

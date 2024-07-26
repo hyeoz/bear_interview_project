@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { Pagination, PaginationItem } from "@mui/material";
+import {
+  ArrowBackIosNewRounded,
+  ArrowForwardIosRounded,
+} from "@mui/icons-material";
 
 import { LocationFilter } from "./components/LocationFilter";
 import { SearchInput } from "./components/SearchInput";
-import "./App.css";
 import { RobotTable } from "./components/RobotTable";
+import { getLocationsData } from "./api";
+import { Location } from "./mocks/db";
+import "./App.css";
 
 const theme = createTheme({
   palette: {
@@ -17,17 +24,58 @@ const theme = createTheme({
 });
 
 function App() {
-  const [filterValue, setFilterValue] = useState("ALL");
+  const [locationName, setLocationName] = useState("ALL");
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState<{
+    total_count: number;
+    locations: Location[];
+  }>({ total_count: 0, locations: [] });
+
+  useEffect(() => {
+    getLocation();
+  }, [page]);
+
+  const getLocation = useCallback(async () => {
+    const res = await getLocationsData({
+      page,
+      location_name: locationName === "ALL" ? undefined : locationName,
+    });
+    setData(res.data);
+  }, [page]);
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <h5 className="fleet">Your Fleet</h5>
         <div className="filter-wrapper">
-          <LocationFilter value={filterValue} setValue={setFilterValue} />
-          <SearchInput />
+          <LocationFilter value={locationName} setValue={setLocationName} />
+          <SearchInput page={page} setData={setData} />
         </div>
-        <RobotTable />
+        <RobotTable data={data.locations} />
+
+        <Pagination
+          count={Math.ceil(data.total_count / 6)}
+          page={page}
+          color="primary"
+          size="small"
+          sx={{
+            marginTop: "24px",
+            "& ul": {
+              justifyContent: "center",
+              gap: "16px",
+            },
+          }}
+          onChange={(event, page) => setPage(page)}
+          renderItem={(item) => (
+            <PaginationItem
+              slots={{
+                previous: ArrowBackIosNewRounded,
+                next: ArrowForwardIosRounded,
+              }}
+              {...item}
+            />
+          )}
+        />
       </div>
     </ThemeProvider>
   );
