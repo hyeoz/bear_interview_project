@@ -1,6 +1,6 @@
 import { DefaultBodyType, rest } from "msw";
 
-import { Location } from "./db";
+import { Location, locations } from "./db";
 
 interface LocationsResult {
   total_count: number;
@@ -11,7 +11,6 @@ interface LocationsPathParams {
   page: string;
   location_name: string;
   robot_id: string;
-  is_starred: string;
 }
 
 export const handlers = [
@@ -19,9 +18,33 @@ export const handlers = [
     "/locations",
     (req, res, ctx) => {
       // Please implement filtering feature here
+      const page = parseInt(req.url.searchParams.get("page") ?? "1");
+      const locationName = req.url.searchParams.get("location_name");
+      const robotId = req.url.searchParams.get("robot_id");
+      const isStarred = req.url.searchParams.get("is_starred");
+
+      console.log(page, locationName, robotId, isStarred);
+      let filteredLocations = [...locations];
+      if (!!locationName || !!robotId) {
+        filteredLocations.filter(
+          (loc) =>
+            (locationName && loc.name.includes(locationName)) ||
+            (robotId && loc.robot.id.includes(robotId))
+        );
+      }
+      if (!!isStarred) {
+        const location_ids = JSON.parse(
+          sessionStorage.getItem("starred_location_ids") || "[]"
+        );
+        filteredLocations.filter((loc) => location_ids.includes(loc.id));
+      }
+      if (!!page) {
+        filteredLocations = filteredLocations.slice((page - 1) * 6, page * 6);
+      }
+
       const result: LocationsResult = {
-        total_count: 0,
-        locations: [],
+        total_count: locations.length,
+        locations: filteredLocations,
       };
 
       return res(ctx.status(200), ctx.json(result));
