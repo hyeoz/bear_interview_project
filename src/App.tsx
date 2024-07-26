@@ -9,7 +9,7 @@ import {
 import { LocationFilter } from "./components/LocationFilter";
 import { SearchInput } from "./components/SearchInput";
 import { RobotTable } from "./components/RobotTable";
-import { getLocationsData } from "./api";
+import { getLocationIdsData, getLocationsData } from "./api";
 import { Location } from "./mocks/db";
 import "./App.css";
 
@@ -35,13 +35,29 @@ function App() {
     getLocation();
   }, [page]);
 
+  useEffect(() => {
+    getStarred();
+  }, [locationName]);
+
   const getLocation = useCallback(async () => {
     const res = await getLocationsData({
       page,
-      location_name: locationName === "ALL" ? undefined : locationName,
     });
     setData(res.data);
   }, [page]);
+
+  const getStarred = useCallback(async () => {
+    if (locationName !== "isStarred") return;
+    const res = await getLocationIdsData();
+    setData((prev) => ({
+      total_count: data.locations.filter((loc) =>
+        res.data.location_ids.includes(loc.id + "")
+      ).length,
+      locations: prev.locations.filter((loc) =>
+        res.data.location_ids.includes(loc.id + "")
+      ),
+    }));
+  }, [locationName]);
 
   return (
     <ThemeProvider theme={theme}>
